@@ -1,63 +1,75 @@
-import {array} from './dane.js';
 
-//let imiona = ["Ryszard","Anon","Hugo","Jacek","Aneta"];
-//let nazwiska = ["Trynkiewicz ","Antoński","Jankowski","Wardęga","Kovacs"];
-
-//let tab = [["Ryszard","Anon","Hugo","Jacek","Aneta"], ["Trynkiewicz","Antoński","Jankowski","Wardęga","Kovacs"]];
-let tab = array;
+//let tab = array;
+var tab = [[],[]];
 let text="";
-
-/*fetch('https://raw.githubusercontent.com/BinaRRR/BazaImionTOO/main/nazwy.txt')
-.then(response => {
-    return response.text();
-})
-.then(data => document.write(data));*/
 
 window.onload = function() {
     let data = document.getElementById("data");
     let imieSearch = document.getElementById("imie");
+    LoadNames();
     FindName();
     FindSurname();
     RemoveIndex();
-    refreshArray();
-
+    //----------------------------------
+    //              ZAD 1
+    //----------------------------------
     function refreshArray()
     {
         data.innerHTML = "";
         for (let i = 0; i < tab[0].length; i++)
         {
-            //document.write(i+1+" | "+nazwiska[i]+" "+imiona[i]+"<br>");
+            
             const temp = (i+1+" | "+tab[1][i]+" "+tab[0][i]+"<br>");
             data.innerHTML += temp;
         }
     }
 
+    function LoadNames()
+    {
+        fetch('https://raw.githubusercontent.com/BinaRRR/BazaImionPAI/main/nazwy.txt')
+        .then(response => {
+            return response.text();
+        })
+        .then(data => {
+            const split = data.split(';'); // Andrzej; Wajda; Marek; Mostowiak; Anna; Zawadzka;
+            for (let i = 0; i < split.length / 2 - 1; i++)
+            {
+                tab[0][i] = split[2*i]; //Andrzej, Marek, Anna
+                tab[1][i] = split[2*i+1]; //Wajda, Mostowiak, Zawadzka
+            }
+            refreshArray();
+        });
+    }
+    //----------------------------------
+    //              ZAD 2
+    //----------------------------------
     function FindName()
     {
-        
+        text = "";
         imieSearch.addEventListener("click", function() {
             text=prompt("Wprowadź imię, które chcesz wyszukać");
             let counter = 0;
             for (let i = 0; i < tab[1].length; i++)
             {
-                if(tab[0][i].toUpperCase().includes(text.toUpperCase()))
-                {
-                    counter++;
-                }   
+                if (tab[0][i].charAt(0).toUpperCase() == text.charAt(0).toUpperCase())
+                    counter++;        
             }
             alert("Znaleziono: "+counter);
         });
     }
-
+    //----------------------------------
+    //              ZAD 3
+    //----------------------------------
     function FindSurname()
     {
+        text = "";
         let nazwiskoSearch = document.getElementById("nazwisko");
         nazwiskoSearch.addEventListener("click", function() {
             let counter = 0;
             text=prompt("Wprowadź nazwisko, które chcesz wyszukać");
-            for (let i = 0; i < nazwiska.length; i++)
+            for (let i = 0; i < tab[1].length; i++)
             {
-                if(tab[1].toUpperCase() === text.toUpperCase())
+                if(tab[1][i].toUpperCase() === text.toUpperCase())
                 {
                     counter++;
                 }   
@@ -65,9 +77,12 @@ window.onload = function() {
             alert("Znaleziono: "+counter); 
         });
     }
-
+    //----------------------------------
+    //              ZAD 4
+    //----------------------------------
     function RemoveIndex()
     {
+        text = "";
         let usun = document.getElementById("usun");
         usun.addEventListener("click", function() {
             text=prompt("Podaj index");
@@ -83,22 +98,3 @@ window.onload = function() {
         });
     }
 }
-//zad 1
-
-
-//zad 2
-
-//zad 3
-
-//document.write("-------------------");
-//zad 4
-
-
-
-
-/*fetch('data.txt')
-.then(response => {
-    return response.text();
-})
-.then(data => document.write(data));*/
-//document.close();
